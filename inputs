@@ -1,1 +1,39 @@
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+import numpy as np
+import matplotlib.pyplot as plt
 
+# Dados simulados
+data = pd.DataFrame({
+    "temperatura": [18, 20, 25, 30, 35],
+    "vendas": [60, 80, 120, 200, 250]
+})
+
+# Separando variáveis independentes (X) e dependente (y)
+X = data[["temperatura"]]
+y = data["vendas"]
+
+# Criando e treinando o modelo
+modelo = LinearRegression()
+modelo.fit(X, y)
+
+# Previsão para temperatura = 28°C
+entrada = np.array([[28]])  # precisa ser 2D
+previsao = modelo.predict(entrada)
+print(f"Previsão de vendas para 28°C: {int(round(previsao[0]))} sorvetes")
+
+# Previsão para várias temperaturas
+entradas_multiplas = np.array([[22], [28], [33]])
+previsoes_multiplas = modelo.predict(entradas_multiplas)
+print("Previsões para várias temperaturas:")
+for temp, pred in zip(entradas_multiplas.flatten(), previsoes_multiplas):
+    print(f"{temp}°C -> {int(round(pred))} sorvetes")
+
+# Visualização da regressão
+plt.scatter(X, y, color="blue", label="Dados reais")
+plt.plot(X, modelo.predict(X), color="red", label="Regressão Linear")
+plt.xlabel("Temperatura (°C)")
+plt.ylabel("Vendas de Sorvete")
+plt.title("Previsão de Vendas de Sorvete vs Temperatura")
+plt.legend()
+plt.show()
